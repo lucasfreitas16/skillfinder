@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar PDF</title>
+
+    <!-- Estilos Customizados -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #7689a9, #f2f2f2); /* De cima (#7689a9) para baixo (#f2f2f2) */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.8); /* Fundo translúcido */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+            max-width: 100%;
+            position: relative;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #uploadForm {
+            background-color: transparent;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #2c3e50; /* Azul escuro */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        /* Logo posicionada no centro superior */
+        .logo {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo da empresa -->
+    <div class="container">
+        <!-- Adicione o caminho da logo aqui -->
+        <img src="Logo.png" class="logo" alt="Logo Empresa"> <!-- Certifique-se que 'logo.png' esteja no mesmo diretório ou ajuste o caminho -->
+
+        <h1>Enviar PDF para o Sistema</h1>
+
+        <!-- Formulário de upload de arquivos -->
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="fileInput">Escolha um PDF:</label><br>
+            <input type="file" id="fileInput" name="pdf" accept="application/pdf"><br>
+            <button type="submit">Enviar PDF</button>
+        </form>
+
+        <p id="responseMessage"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do formulário
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('fileInput').files[0];
+
+            if (!fileInput) {
+                alert("Selecione um arquivo PDF.");
+                return;
+            }
+
+            formData.append('pdf', fileInput);
+
+            // Enviar o arquivo para o backend
+            fetch('http://localhost:5001/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('responseMessage').innerText = data.message;
+            })
+            
+            .catch(error => {
+                console.error('Erro ao enviar o arquivo:', error);
+            });
+        });
+
+    </script>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevents default form submission
+            
+            // Simulate successful upload and redirect to success page
+            window.location.href = 'pagina_sucesso.html';
+        });
+    </script>
+</body>
+</html>

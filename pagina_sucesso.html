@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exibir Nomes e Scores</title>
+
+    <!-- Estilos customizados para tabela -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #7689a9, #f2f2f2); /* De cima (#7689a9) para baixo (#f2f2f2) */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #2c3e50; /* Azul escuro */
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 18px;
+            text-align: left;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table thead tr {
+            background-color: #6c7ae0; /* Azul moderado */
+            color: white;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+        }
+
+        table tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        table tbody tr:last-of-type {
+            border-bottom: 2px solid #6c7ae0;
+        }
+
+        /* Ajuste para células de nome e score */
+        td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Lista dos Candidatos e Scores</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Candidato</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody id="scoreTableBody">
+            <!-- Os dados serão inseridos aqui via JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        // Função para preencher a tabela com os dados
+        function populateTable(data) {
+            const tableBody = document.getElementById('scoreTableBody');
+            tableBody.innerHTML = ''; // Limpa qualquer conteúdo anterior
+            data.scores.forEach(scoreEntry => {
+                const row = document.createElement('tr');
+                const nameCell = document.createElement('td');
+                const scoreCell = document.createElement('td');
+                
+                nameCell.textContent = scoreEntry.Nome;
+                scoreCell.textContent = scoreEntry.Score;
+
+                row.appendChild(nameCell);
+                row.appendChild(scoreCell);
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Faz a requisição para o servidor Flask
+        async function fetchScores() {
+            try {
+                const response = await fetch('http://34.237.203.148:5000/run/01'); // O endpoint do Flask
+                const data = await response.json();
+                console.log(data);
+                populateTable(data); // Popula a tabela com os dados recebidos
+            } catch (error) {
+                console.error('Erro ao buscar os dados:', error);
+            }
+        }
+
+        // Chama a função para buscar os dados ao carregar a página
+        window.onload = fetchScores;
+    </script>
+</body>
+</html>
